@@ -1,0 +1,4 @@
+export enum ResponseStatus {
+	WAITING_FOR_RESPONSE = 'WAITING_FOR_RESPONSE',
+	RESPONDED = 'RESPONDED'
+}
