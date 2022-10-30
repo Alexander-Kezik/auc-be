@@ -11,11 +11,17 @@ export class Lot {
 	@Column()
 	startPrice: number;
 
-	@Column({ default: null })
+	@Column()
 	currentPrice: number;
+
+	@Column({ nullable: true, default: null })
+	winner: string;
 
 	@Column()
 	immediatePurchasePrice: number;
+
+	@Column({ default: false })
+	ended: boolean;
 
 	@CreateDateColumn()
 	startDate: Date;

@@ -1,4 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, JoinTable, ManyToMany } from 'typeorm';
+import { Exclude } from 'class-transformer';
 
 import { UserStatus } from '../user-status.enum';
 import { Lot } from '../../lot/lot.entity';
@@ -19,6 +20,7 @@ export class User {
 	email: string;
 
 	@Column()
+	@Exclude()
 	password: string;
 
 	@Column({ default: UserStatus.EMAIL_CONFIRMATION, enum: UserStatus })

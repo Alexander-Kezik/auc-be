@@ -25,7 +25,7 @@ export class Support {
 	response: string;
 
 	@CreateDateColumn()
-	msg_sent_date: Date;
+	msgSentDate: Date;
 
 	@ManyToMany(() => User, { cascade: true })
 	@JoinTable()

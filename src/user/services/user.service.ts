@@ -5,6 +5,8 @@ import { UserRepository } from '../repositories/user.repository';
 import { RegCredentialsDto } from '../dto/reg-credentials.dto';
 import { AuthCredentialsDto } from '../dto/auth-credentials.dto';
 import { UserStatus } from '../user-status.enum';
+import { User } from '../entities/user.entity';
+import { PaginationDto } from '../../lot/dto/pagination.dto';
 
 @Injectable()
 export class UserService {
@@ -29,5 +31,13 @@ export class UserService {
 		} else {
 			throw new UnauthorizedException('Wrong password');
 		}
+	}
+
+	getUserByEmail(email: string): Promise<User> {
+		return this.userRepository.findUser({ email });
+	}
+
+	getUsers(paginationDto: PaginationDto): Promise<{ users: User[]; count: number }> {
+		return this.userRepository.findUsers(paginationDto);
 	}
 }

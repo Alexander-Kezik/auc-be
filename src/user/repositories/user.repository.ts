@@ -13,6 +13,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { RegCredentialsDto } from '../dto/reg-credentials.dto';
 import { sendConfirmationEmail } from '../utils/send-email-confirmation';
 import { RoleRepository } from './role.repository';
+import { PaginationDto } from '../../lot/dto/pagination.dto';
 
 @Injectable()
 export class UserRepository {
@@ -65,5 +66,17 @@ export class UserRepository {
 		}
 
 		return user;
+	}
+
+	async findUsers({
+		take = 10,
+		skip = 0
+	}: PaginationDto): Promise<{ users: User[]; count: number }> {
+		try {
+			const [users, count] = await this.userRepository.findAndCount({ take, skip });
+			return { users, count };
+		} catch (e) {
+			throw new InternalServerErrorException(`Server error: ${e.code}`);
+		}
 	}
 }

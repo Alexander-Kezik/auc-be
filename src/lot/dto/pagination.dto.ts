@@ -1,4 +1,4 @@
-export class PaginationLotDto {
+export class PaginationDto {
 	take: number;
 	skip: number;
 }
