@@ -25,7 +25,12 @@ export class LotController {
 		return this.lotService.getLot(id);
 	}
 
-	@Get('get/by-name')
+	@Get('get/by-email')
+	getLotsByEmail(@Query('email') email: string): Promise<Lot[]> {
+		return this.lotService.getLotsByEmail(email);
+	}
+
+	@Get('get/by-lot-name')
 	findLotsByName(
 		@Query('search_query') searchQuery: string
 	): Promise<{ lots: Lot[]; count: number }> {

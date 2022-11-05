@@ -5,7 +5,6 @@ import { LotRepository } from './lot.repository';
 import { CreateLotDto } from './dto/create-lot.dto';
 import { PaginationDto } from './dto/pagination.dto';
 import { UserRepository } from '../user/repositories/user.repository';
-import { IsAucEnded } from './decorators/is-auc-ended.decorator';
 
 @Injectable()
 export class LotService {
@@ -42,8 +41,12 @@ export class LotService {
 		return this.lotRepository.increaseStake(value, id);
 	}
 
-	@IsAucEnded()
 	buyLot(id: string): Promise<{ message: string }> {
 		return this.lotRepository.buyLot(id);
+	}
+
+	async getLotsByEmail(email: string): Promise<Lot[]> {
+		const { id } = await this.userRepository.findUser({ email });
+		return this.lotRepository.getLotsByUserId(id);
 	}
 }

@@ -1,4 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { RoleEnum } from '../role.enum';
 
 @Entity()
 export class Role {
@@ -6,5 +7,5 @@ export class Role {
 	id: string;
 
 	@Column({ unique: true })
-	role: string;
+	role: RoleEnum;
 }

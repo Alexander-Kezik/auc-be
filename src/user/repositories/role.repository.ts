@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 
 import { Role } from '../entities/roles.entity';
 import { CreateRoleDto } from '../dto/create-role.dto';
+import { RoleEnum } from '../role.enum';
 
 @Injectable()
 export class RoleRepository {
@@ -16,7 +17,7 @@ export class RoleRepository {
 		const { role } = createRoleDto;
 
 		try {
-			await this.roleRepository.save({ role: role.toUpperCase() });
+			await this.roleRepository.save({ role });
 			return { message: `The role ${createRoleDto.role} was created` };
 		} catch (e) {
 			if (e.code === '23505') {
@@ -27,7 +28,7 @@ export class RoleRepository {
 		}
 	}
 
-	async findRole(role: string): Promise<Role> {
+	async findRole(role: RoleEnum): Promise<Role> {
 		return await this.roleRepository.findOne({ where: { role } });
 	}
 }

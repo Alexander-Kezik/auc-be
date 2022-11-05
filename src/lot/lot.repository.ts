@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { LessThan, Like, Repository, UpdateResult } from 'typeorm';
+import { Like, Repository, UpdateResult } from 'typeorm';
 
 import { Lot } from './lot.entity';
 import { CreateLotDto } from './dto/create-lot.dto';
@@ -29,12 +29,10 @@ export class LotRepository {
 
 	async getLots({ take = 10, skip = 0 }: PaginationDto): Promise<{ lots: Lot[]; count: number }> {
 		try {
-			await this.changeLotStatusByTime();
 			const [lots, count] = await this.lotRepository.findAndCount({
 				take,
 				skip,
-				order: { endDate: 'ASC' },
-				where: { ended: false }
+				order: { endDate: 'ASC' }
 			});
 			return { lots, count };
 		} catch (e) {
@@ -72,7 +70,6 @@ export class LotRepository {
 
 	async sortLotsByCurrentPrices(): Promise<{ lots: Lot[]; count: number }> {
 		try {
-			await this.changeLotStatusByTime();
 			const [lots, count] = await this.lotRepository.findAndCount({
 				order: { currentPrice: 'ASC' },
 				where: { ended: false }
@@ -85,7 +82,6 @@ export class LotRepository {
 
 	async getLotsByRandom(): Promise<Lot[]> {
 		try {
-			await this.changeLotStatusByTime();
 			return await this.lotRepository.createQueryBuilder().orderBy('RANDOM()').limit(12).getMany();
 		} catch (e) {
 			throw new InternalServerErrorException(`Server error: ${e.code}`);
@@ -96,7 +92,6 @@ export class LotRepository {
 		let lot: Lot;
 
 		try {
-			await this.changeLotStatusByTime();
 			const lot = await this.lotRepository.findOne({ where: { id, ended: false } });
 			if (lot && value / lot.startPrice >= lot.startPrice * 0.1) {
 				await this.lotRepository
@@ -121,7 +116,6 @@ export class LotRepository {
 		let result: UpdateResult;
 
 		try {
-			await this.changeLotStatusByTime();
 			result = await this.lotRepository
 				.createQueryBuilder()
 				.update({ ended: true })
@@ -138,17 +132,9 @@ export class LotRepository {
 		}
 	}
 
-	async changeLotStatusByTime(): Promise<void> {
+	async getLotsByUserId(userId: string): Promise<Lot[]> {
 		try {
-			const lotsWithExpiredTime = await this.lotRepository.find({
-				where: { endDate: LessThan(new Date()) },
-				select: { id: true }
-			});
-			await this.lotRepository
-				.createQueryBuilder()
-				.update({ ended: true })
-				.where(lotsWithExpiredTime)
-				.execute();
+			return this.lotRepository.find({ where: { userId } });
 		} catch (e) {
 			throw new InternalServerErrorException(`Server error: ${e.code}`);
 		}

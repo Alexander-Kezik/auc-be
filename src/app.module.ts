@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as dotenv from 'dotenv';
 
@@ -6,6 +6,7 @@ import { UserModule } from './user/user.module';
 import { LotModule } from './lot/lot.module';
 import { CategoryModule } from './category/category.module';
 import { SupportModule } from './support/support.module';
+import { LotExistCheckMiddleware } from './common/middlewares/lot-exist-check.middleware';
 
 dotenv.config();
 

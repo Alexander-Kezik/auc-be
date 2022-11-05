@@ -13,6 +13,9 @@ export class User {
 	@Column()
 	name: string;
 
+	@Column({ default: 0 })
+	balance: number;
+
 	@Column({ unique: true })
 	username: string;
 
